@@ -2,6 +2,7 @@ from numpy import fromfile, array, mean, median, reshape, int16, concatenate
 from math import floor, tan
 from matplotlib import pyplot as plt
 from scipy import ndimage
+import sys 
 
 
 class SectionMaker(object):
@@ -97,10 +98,25 @@ def average_topo(D, sz):
     return ndimage.uniform_filter(D, size=sz, mode='constant')
 
 
-SM = SectionMaker(['g10g', 'h10g'])
-SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2700, colend=5500) # EW profile through Hengduan Mountain Range
-SM.plot_slice(rowstart=2000, colstart=5000,  rowend=4000, colend=5000) # NS profile through Hengduan Mountain Range
-SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2200, colend=5500) # arbitrary profile through Hengduan Mountain Range
+def showcase():
+    SM = SectionMaker(['g10g', 'h10g'])
+    SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2700, colend=5500) # EW profile through Hengduan Mountain Range
+    SM.plot_slice(rowstart=2000, colstart=5000,  rowend=4000, colend=5000) # NS profile through Hengduan Mountain Range
+    SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2200, colend=5500) # arbitrary profile through Hengduan Mountain Range
 
-SM.label_plots()
-plt.show()
+    SM.label_plots()
+    plt.show()
+
+if __name__=="__main__":
+    print("{} arguments were found".format(len(sys.argv) - 1))
+    if len(sys.argv) <= 1:
+        showcase()
+    else:
+        SM = SectionMaker(['g10g', 'h10g'])
+        rs, cs, re, ce = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
+        SM.plot_slice(rowstart=rs, colstart=cs,  rowend=re, colend=ce) # arbitrary profile through Hengduan Mountain Range
+
+        SM.label_plots()
+        plt.show()
+
+    
