@@ -15,20 +15,25 @@ class SectionMaker(object):
         self.files = filenames
         self.data = None
         self.read_data()
-        self.fig, self.axes = plt.subplots(2,1, figsize=(12,12))
+        self.fig, self.axes = plt.subplots(2,1, figsize=(12,6))
         self.fsize = fsize
         self.I = self.topoimage()
 
     def read_data(self):
-        for f in self.files:
-            d = fromfile(f, dtype=int16)
+        if len(self.files) > 1:
+            for f in self.files:
+                d = fromfile(f, dtype=int16)
+                d = reshape(d, (6000, 10800))
+                if f == "h10g":
+                    d = d[0:4000, 0:2000]
+                else:
+                    d = d[0:4000, 7000:]
+                self.merge_data(d)
+        else:
+            d = fromfile(self.files[0], dtype=int16)
             d = reshape(d, (6000, 10800))
-            if f == "h10g":
-                d = d[0:4000, 0:2000]
-            else:
-                d = d[0:4000, 7000:]
+            d = d[0:1000, 0:2500]
             self.merge_data(d)
-        
 
     def merge_data(self, data,xdir=1):
         if self.data is None:
@@ -37,7 +42,8 @@ class SectionMaker(object):
             self.data = concatenate((self.data, data), axis=xdir)
 
     def topoimage(self):
-        self.smooth_topo()
+        if self.fsize is not None:
+            self.smooth_topo()
         return self.axes[0].imshow(self.data, cmap='binary')
     
     def plot_slice(self, rowstart=0, colstart=0, rowend=0, colend=0):
@@ -55,21 +61,25 @@ class SectionMaker(object):
             self.axes[1].plot(self.data[rowstart:rowend, colstart], 'b')
         else:
             # arbitrary profile
-            self.axes[0].plot([colstart, colend], [rowstart, rowend], 'gx-')
-            newarray = self.slice_data(rowstart, colstart, rowend, colend)
-            self.axes[1].plot(newarray, 'g-')
+            self.axes[0].plot([colstart, colend], [rowstart, rowend], 'rx-')
+            x, newarray = self.slice_data(rowstart, colstart, rowend, colend)
+            self.axes[1].plot(x, newarray, 'r-')
+            self.axes[1].set_aspect(5)
+            self.axes[1].set_xlim([0, max(x)])
+            self.axes[1].set_ylim([0, max(newarray)+0.5])
 
         
     def label_plots(self):
         self.axes[0].set_xlabel("EW distance [km]")
         self.axes[0].set_ylabel("NS distance [km]")
         self.axes[1].set_xlabel("Horizontal distance along profile [km]")
-        self.axes[1].set_ylabel("Elevation [m]")
+        self.axes[1].set_ylabel("Elevation [km]")
         self.axes[1].grid(b=True)
         self.fig.subplots_adjust(right=0.8)
-        cbar_ax = self.fig.add_axes([0.85, 0.15, 0.05, 0.7])
+        cbar_ax = self.fig.add_axes([0.7, 0.50, 0.05, 0.4])
         self.fig.colorbar(self.I, cax=cbar_ax)
         self.fig.suptitle("DEM (radial filtersize {}) and selected profile ".format(self.fsize))
+        self.axes[1].set_title("Topography (vertical exaggeration 5x)")
 
     
     def slice_data(self, rs, cs, re, ce):
@@ -94,8 +104,8 @@ class SectionMaker(object):
             # in which grid cell are you? column = starting column + i, row = floor(y[i]) 
             ri = int(floor(val))
             ci = cs + i
-            newdata.append(self.data[ri, ci])
-        return newdata
+            newdata.append(self.data[ri, ci]/1e3)
+        return y-y[0], newdata
 
     def smooth_topo(self):
         if self.fsize is not None:
@@ -105,10 +115,10 @@ class SectionMaker(object):
 
 
 def showcase():
-    SM = SectionMaker(['g10g', 'h10g'], fsize=25)
-    SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2700, colend=5500) # EW profile through Hengduan Mountain Range
-    SM.plot_slice(rowstart=2000, colstart=5000,  rowend=4000, colend=5000) # NS profile through Hengduan Mountain Range
-    SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2200, colend=5500) # arbitrary profile through Hengduan Mountain Range
+    SM = SectionMaker(['g10g'])
+    # SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2700, colend=5500) # EW profile through Hengduan Mountain Range
+    # SM.plot_slice(rowstart=2000, colstart=5000,  rowend=4000, colend=5000) # NS profile through Hengduan Mountain Range
+    SM.plot_slice(rowstart=250, colstart=950,  rowend=550, colend=1100) # arbitrary profile through Central Alps
 
     SM.label_plots()
     plt.show()
