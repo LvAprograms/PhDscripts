@@ -1,0 +1,8 @@
+xsize 2.120e6  xnumx 213
+ysize 2.040e5  ynumy  69
+zsize 1.320e6  znumz 133
+permeable 1
+xstart  xend    ystart  yend    zstart  zend    vpushstart  vpushend
+0       800     0       204     0       0       5           5
+800     900     0       204     0       0       5           0
+2120    2120    0       204     0       1320    -1.22       -1.22
