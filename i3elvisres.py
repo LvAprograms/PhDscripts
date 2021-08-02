@@ -1,5 +1,5 @@
 def check_resolution(xres, yres, zres):
-    for n in range(20):
+    for n in range(40):
         N = getN(n)
         xsize = (N-1) * xres
         ysize = (N-1) * yres
@@ -12,4 +12,4 @@ def getN(n):
     return 16 * n + 5
 
 if __name__=="__main__":
-    check_resolution(10, 3, 10)
+    check_resolution(5, 2, 5)

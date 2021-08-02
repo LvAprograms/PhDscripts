@@ -1,3 +1,6 @@
 *.png
 g10g
 h10g
+.vscode/
+*.out
+*.o

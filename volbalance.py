@@ -2,7 +2,7 @@ import sys
 
 def cmyr2ms(speed):
     result = speed /( 3600 * 24 * 365.24 * 100) 
-    # print("{} cm/yr can be converted to {} m/s".format(speed,result))
+    print("{} cm/yr can be converted to {} m/s".format(speed,result))
     return result
 
 class UpLowBoundaryFluxMaster(object):
@@ -49,9 +49,9 @@ class UpLowBoundaryFluxMaster(object):
             z1 = item[5]
             v0 = item[6]
             v1 = item[7]
-            if x1 != x0:
+            if x1 != x0: # if boundary velocity at x-y plane 
                 air_in += air_thickness * (x1 - x0) * 1000 * 0.5 * (cmyr2ms(v0) + cmyr2ms(v1))
-            elif z1 != z0:
+            elif z1 != z0: # if boundary velocity at z-y plane
                 air_in += air_thickness * (z1 - z0) * 1000 * 0.5 * (cmyr2ms(v0) + cmyr2ms(v1))
             # print(air_in)
         air_out = air_in / (self.input['xsize'] * self.input['zsize'])
