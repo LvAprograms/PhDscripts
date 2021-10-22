@@ -22,7 +22,7 @@ class SectionMaker(object):
     def read_data(self):
         for f in self.files:
             d = fromfile(f, dtype=int16)
-            d = reshape(d, (6000, 10800))
+            d = reshape(d, (6000, 10800))/1000
             if f == "h10g":
                 d = d[0:4000, 0:2000]
             else:
@@ -58,18 +58,21 @@ class SectionMaker(object):
             self.axes[0].plot([colstart, colend], [rowstart, rowend], 'gx-')
             newarray = self.slice_data(rowstart, colstart, rowend, colend)
             self.axes[1].plot(newarray, 'g-')
-
+        # self.axes[1].set_aspect(50)
         
     def label_plots(self):
         self.axes[0].set_xlabel("EW distance [km]")
         self.axes[0].set_ylabel("NS distance [km]")
         self.axes[1].set_xlabel("Horizontal distance along profile [km]")
         self.axes[1].set_ylabel("Elevation [m]")
-        self.axes[1].grid(b=True)
-        self.fig.subplots_adjust(right=0.8)
-        cbar_ax = self.fig.add_axes([0.85, 0.15, 0.05, 0.7])
-        self.fig.colorbar(self.I, cax=cbar_ax)
-        self.fig.suptitle("DEM (radial filtersize {}) and selected profile ".format(self.fsize))
+        # self.axes[1].grid(b=True)
+        cbar_ax = self.fig.add_axes([0.8, 0.5, 0.05, 0.4])
+        C = self.fig.colorbar(self.I, cax=cbar_ax, ax=self.axes[0])
+        C.ax.set_title("Topography [km]" )
+        self.fig.subplots_adjust(wspace=0.0)
+        # self.fig.subplots_adjust(right=0.8)
+        # self.fig.colorbar(self.I, cax=cbar_ax)
+        # self.fig.suptitle("DEM (radial filtersize {}) and selected profile ".format(self.fsize))
 
     
     def slice_data(self, rs, cs, re, ce):
@@ -105,8 +108,8 @@ class SectionMaker(object):
 
 
 def showcase():
-    SM = SectionMaker(['g10g', 'h10g'], fsize=25)
-    SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2700, colend=5500) # EW profile through Hengduan Mountain Range
+    SM = SectionMaker(['g10g', 'h10g'], fsize=None)
+    SM.plot_slice(rowstart=2700, colstart=4000,  rowend=2700, colend=5500) # EW profile through Hengduan Mountain Range
     SM.plot_slice(rowstart=2000, colstart=5000,  rowend=4000, colend=5000) # NS profile through Hengduan Mountain Range
     SM.plot_slice(rowstart=2700, colstart=4400,  rowend=2200, colend=5500) # arbitrary profile through Hengduan Mountain Range
 
