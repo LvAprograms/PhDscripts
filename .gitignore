@@ -1,6 +1,14 @@
 *.png
+*.jpg
+*.tiff
 g10g
 h10g
 .vscode/
 *.out
 *.o
+*.vtk
+*.series
+*times.txt
+i2stm.c
+in2stm.c
+PTt

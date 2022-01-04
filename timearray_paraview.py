@@ -1,5 +1,7 @@
+import sys
 
-def time_to_json(file, model):
+
+def time_to_json(file, model, savepath):
     """
     open a "times.txt" file, read the file number, put it in a text buffer and write this to the correct *.vtr.series file
     """
@@ -13,10 +15,13 @@ def time_to_json(file, model):
                 txt += '\n\t\t{{ "name" : "{}{}.vtr", "time" : {}}}'.format(model,fileno, time)
                 txt += ','
          
-    with open("/media/luuk/alphav8x1/PhD/ErosionModelling/strongzones/{}".format(model+ ".vtr.series"), 'w') as f:
+    with open(savepath+"/{}".format(model+ ".vtr.series"), 'w') as f:
         txt = txt[0:-1] # get rid of the extra comma at the end of the series
         txt += '\n\t]\n}'
         f.write(txt)
 
 if __name__ == "__main__":
-    time_to_json('/media/luuk/alphav8x1/PhD/ErosionModelling/strongzones/strongzones_times.txt', 'sichuan')
+    expath = sys.argv[1]
+    model = sys.argv[2]
+    savepath = sys.argv[3]
+    time_to_json(expath + '/times.txt', model, savepath)

@@ -10,7 +10,7 @@ class i3Box(object):
         self.z4567 = zend
     
     def __repr__(self):
-        return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\n{12}\t{13}\t{14}\t{15}\t{16}\t{17}\t{18}\t{19}\t{20}\t{21}\n\n".format(self.x0145, 
+        return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\n{12}\t{13}\t{14}\t{15}\t{16}\t{17}\t{18}\t{19}\t{20}\t{21}\t{22}\t{23}\n\n".format(self.x0145, 
         self.y0246, self.z0123, self.x0145, self.y1357, self.z0123, self.x2367,self.y0246, self.z0123, self.x2367, self.y1357, self.z0123, self.x0145, self.y0246,
         self.z4567, self.x0145, self.y1357, self.z4567, self.x2367, self.y0246, self.z4567, self.x2367, self.y1357, self.z4567)
 
