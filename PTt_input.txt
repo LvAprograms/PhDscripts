@@ -1,0 +1,9 @@
+0-xmin
+500e3-xmax
+25e3-ymin
+27e3-ymax
+0-zmin
+400e3-zmax
+5,7,-complist
+100e3-dx
+100e3-dz
